@@ -1,0 +1,78 @@
+#!/usr/bin/env python
+
+#-------------------------------------------------------------------
+#  runServer
+#
+#-------------------------------------------------------------------
+
+"""Boots up a web server.
+"""
+
+#-------------------------------------------------------------------
+# Import statements go here.
+#
+import flask
+from flask import Flask
+from flask import request 
+from flask import render_template # this is for static pages.  may not need.
+import os.path 
+
+import csv
+import json
+
+#
+# Import statements go above this line.
+#-------------------------------------------------------------------
+
+# To start the web server: python runServer
+webRoot = "./ui"
+
+# create an instance of a WSGI app
+app = Flask('healthStats', static_folder=webRoot, static_url_path='') 
+
+# Descrease the cache time from 12 hours to 1 second.
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 1
+
+# This tells Flask to accept connections from anywhere.
+# Use 127.0.0.1 to allow connections from localhost only.
+host = '0.0.0.0'
+
+# The path to the data storage csv file
+filename = './model/csvtest.csv'
+
+@app.route('/')
+def serveRoot():
+  return flask.send_from_directory(webRoot, 'index.html') # this is the response
+
+@app.route('/read')
+def deserialize():
+  #filename = './model/csvtest.csv'
+  with open(filename, 'rb') as csvfile:
+    reader = csv.DictReader(csvfile) # avoid passing the header params
+    # prep a data structure to build up data for deserialization
+    output = { "record" : [] }
+    for rowDict in reader:
+      # convert string-cast stat back to a float
+      rowDict['stat'] = float(rowDict['stat'].strip())
+      # build up the data structure row by row
+      output['record'].append(rowDict) 
+    # put in chronological order
+    output['record'].sort()
+    # deserialize to json
+    return json.dumps(output, indent=2)
+
+@app.route('/write', methods=['POST']) 
+def serialize():
+  # store the request payload
+  jsonData = request.get_json()
+  date = jsonData['date']
+  stat = jsonData['stat']
+  # create a line to add to the csv
+  line = "\n" + date + ", " + str(stat)
+  # open the csv for writing
+  with open(filename, 'ab') as csvfile:
+    csvfile.write(line)
+  return "whatevs"
+
+app.run(host=host, port=8002, debug=True, processes=7) # reload on code changes
+

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Health Stats</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta charset="utf-8"/>
+    <meta name="description" content="EventTagging"/>
+    <meta name="viewport"
+    	content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+
+    <!-- global css -->
+    <link rel="stylesheet" type="text/css" href="index.css" />
+    <link rel="stylesheet" type="text/css" href="dossier/dossier.css" />
+
+    <!-- directive css -->
+
+    <!--LL: for better error messages, load full CDN rather than minified file -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-route.js"></script>
+
+		<!--Javascript-->
+		<script src="index.js"></script>
+    <!-- directive js -->
+    <script src="dossier/Dossier.js"></script>
+    <script src="dossier/DossierEntry.js"></script>
+    <script src="dossier/DossierHistory.js"></script>
+
+	</head>
+	<body ng-app="healthStatsModule">
+
+		<!--Q: do we need ng-view, or can we dive right into directives?
+			Q: what does ng-view do?
+			Q: why are directive elements commented out?
+
+			A: ng-view activates the angular routing, which points to the directive we want to show.  I'm not entirely sure why this is better.
+
+		-->
+		<!-- ng-view includes the rendered template of the current route in the main layout-->
+		<div class="mainView" ng-view></div>
+	</body>
+
+	<!-- This is legacy code.  Look into its necessity -->
+	<script>
+      /* iOS5- re-orientation fix */
+      if (navigator.userAgent.match(/iPhone/i) ||
+          navigator.userAgent.match(/iPad/i))
+      {
+        /* iOS hides Safari address bar */
+        var setTimeoutFunc = function()
+        {
+          setTimeout(
+            function() {
+              window.scrollTo(0, 1);
+            }, 1000);
+        };
+        window.addEventListener("load", setTimeoutFunc);
+      }
+    </script>
+</html>
