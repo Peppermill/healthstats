@@ -12,7 +12,9 @@
 // HTML attributes.
 var dossierEntryHtmlAttrs =
 {
-  
+  /** A string flagging any displays in need of an update.  
+   */
+  'renew' : '='
 };
 
 //------------------------------------------------------------------
@@ -41,6 +43,7 @@ function DossierEntryCtrl(ngScope, ngTimeout) //  TODO: might not need timeout
    */
   ngScope.initDossierEntryCtrl = function()
   {
+    // ensure globals are available
     ngScope.hsGlobals = hsGlobals;
   };
 
@@ -75,13 +78,17 @@ function DossierEntryCtrl(ngScope, ngTimeout) //  TODO: might not need timeout
       function (data, status, headers, config) {
         throw new Error('Something went wrong');
       }
-    );  };
+    );
+  }; 
 
   /** Follow up successful post
    */
   ngScope.postSuccess = function()
   {
-    console.log("poke2");
+    //ngScope.$parent.read();
+    console.log("write-success. renew: ", ngScope.renew);
+    ngScope.renew = "update";
+    console.log("renew-edited: ", ngScope.renew);
     // hit the /stats python route to rewrite the chart
   };
 

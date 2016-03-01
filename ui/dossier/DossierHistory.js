@@ -12,9 +12,9 @@
 // HTML attributes.
 var dossierHistoryHtmlAttrs =
 {
-  
+  'healthRecord' : '='
 };
-
+ 
 //------------------------------------------------------------------
 
 /** Controller for the Dossier directive.
@@ -25,11 +25,6 @@ function DossierHistoryCtrl(ngScope, ngTimeout) //  TODO: might not need timeout
   // Properties
   //----------------------------------------------------------------
 
-  /** TODO: Purpose
-   */
-  ngScope.data = {};
-
-  // TODO: Do I need to put globals in here?
 
   //----------------------------------------------------------------
   // Initialization
@@ -40,60 +35,15 @@ function DossierHistoryCtrl(ngScope, ngTimeout) //  TODO: might not need timeout
   ngScope.initDossierHistoryCtrl = function()
   {
     ngScope.hsGlobals = hsGlobals;
-
-    // successful experiment
-    // ngScope.retrieveRecord();
-
-    // display health stats
-    ngScope.executeFlaskMethod();
+    
+    console.log("DossierHistory returned: ", ngScope.heathRecord);
   };
 
   //----------------------------------------------------------------
   // Methods
   //----------------------------------------------------------------
 
-  /** Gets an existing record from the server.
-   */
-  ngScope.retrieveRecord = function()
-  {
-    var url = 'test.json'; // this works fine
-    var futureResponse = ngScope.hsGlobals.ng.http.get(url);
-
-    futureResponse.success(ngScope.displayRecord);
-    futureResponse.error(
-      function (data, status, headers, config) {
-        throw new Error('Something went wrong');
-      }
-    );
-  };
-
-  ngScope.displayRecord = function(data, status, headers, config)
-  {
-    ngScope.data = data;
-    console.log("flask returned: ", ngScope.data);
-  }
-
-  /** Gets an existing record from the server.
-   */
-  ngScope.executeFlaskMethod = function()
-  {
-    var url = '/read';
-    var futureResponse = ngScope.hsGlobals.ng.http.get(url);
-
-    futureResponse.success(ngScope.flaskReturn);
-    futureResponse.error(
-      function (data, status, headers, config) {
-        throw new Error('Something went wrong');
-      }
-    );
-  };
-
-  ngScope.flaskReturn = function(data, status, headers, config)
-  {
-    ngScope.data = data;
-    console.log("flask returned: ", ngScope.data);
-  }
-
+  
   //----------------------------------------------------------------
   // Call the init method to initialize the new object.
   // Do not edit this line.

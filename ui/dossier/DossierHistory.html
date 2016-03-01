@@ -2,10 +2,9 @@
 	<!-- TODO: maybe we want to capture the header in the json -->
 	<table>
 		<tr><th>date</th><th>stat</th></tr>
-		<tr ng-repeat="item in data.record">
-
+		<tr ng-repeat="item in healthRecord.record">
 			<td>{{ item.date | date:'mediumDate' }}</td>
 			<td>{{ item.stat }}</td>
 		</tr>
 	</table>
-</div>
+</div> 

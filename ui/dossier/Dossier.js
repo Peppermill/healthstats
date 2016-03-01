@@ -5,14 +5,14 @@
 "use strict";
 //------------------------------------------------------------------
 
-/** TODO: Purpose
+/** Dossier manages elements that allow the input and display of health statistics.
  */
 
 //------------------------------------------------------------------
 // HTML attributes.
 var dossierHtmlAttrs =
 {
-  
+  // no attributes passed in
 };
 
 //------------------------------------------------------------------
@@ -25,9 +25,14 @@ function DossierCtrl(ngScope, ngTimeout) //  TODO: might not need timeout
   // Properties
   //----------------------------------------------------------------
 
-  /** TODO: Purpose
+  /** A string flagging any displays in need of an update.  
    */
-  ngScope.article = "";
+  ngScope.renew = "none";
+
+
+  /** An object recording date, time-of-day and stat for a health metric
+   */
+  ngScope.record = {};
 
   //----------------------------------------------------------------
   // Initialization
@@ -37,42 +42,41 @@ function DossierCtrl(ngScope, ngTimeout) //  TODO: might not need timeout
    */
   ngScope.initDossierCtrl = function()
   {
-    // TODO: might not need timeout
+    ngScope.hsGlobals = hsGlobals;
 
-    // TODO: Don's stuff.  Prune as needed.
-    /*
-    ngScope.etGlobals = etGlobals;
-    ngTimeout(ngScope.retrieveArticle, 100);
-    if (etGlobals.userInfo.numberArticles == 0)
-    {
-      ngScope.tutorialIndex = -1;
-      ngTimeout(ngScope.nextTutorial, 200);
-    }
-    */
+    // Read the record from a stored csv.
+    ngScope.read();
+
+    // Watch the renewal flag.
+    ngScope.$watch('renew', ngScope.read);
   };
 
   //----------------------------------------------------------------
   // Methods
   //----------------------------------------------------------------
-
-  /** Gets an existing record from the server.
+  
+  /** Get a json obj containing stat data from storage.
    */
-  ngScope.retrieveRecord = function()
+  ngScope.read = function()
   {
-    // TODO: Don's stuff.  Revise as needed.
-    // using random example files for now.
-    /*var params = {};
-    params.userId = ngScope.userId;
-    var url = '';
-    var request = etGlobals.http.createRequest(url, params);*/
-    /*
-    var response = {
-      'id': 'samspeech',
-      'text': ngScope.article
-    };
-    ngScope.articleRetrieved(response);
-    */
+    var url = '/read';
+    var futureResponse = ngScope.hsGlobals.ng.http.get(url);
+    futureResponse.success(ngScope.handleReadSuccess);
+    futureResponse.error(
+      function (data, status, headers, config) {
+        throw new Error('Something went wrong');
+      }
+    );
   };
+
+  /** Handle successful return of the json obj containing stat data.
+   */
+  ngScope.handleReadSuccess = function(data, status, headers, config)
+  {
+    ngScope.record = data;
+    ngScope.renew = "none";
+  };
+
 
   //----------------------------------------------------------------
   // Call the init method to initialize the new object.
